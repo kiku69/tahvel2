@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import Label from '@/components/ui/label/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import { Head, router } from '@inertiajs/vue3';
+
+import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,6 +14,21 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
 ];
+
+defineProps<{
+    name?: string;
+    userData: any;
+}>();
+
+
+
+const tahvelCookie = ref<string>()
+
+const saveTahvelCookie = () => {
+    router.put('/save.tahvel-cookie', {
+        tahvel_cookie: tahvelCookie.value,
+    });
+};
 </script>
 
 <template>
@@ -18,20 +36,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <PlaceholderPattern />
-                </div>
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <PlaceholderPattern />
-                </div>
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <PlaceholderPattern />
-                </div>
+            <div>
+                <div class="">
+                <Label>Tahvel auth cookie</Label>
+                <Textarea class="mt-1" v-model="tahvelCookie"></Textarea>
+                <p class="text-xs text-destructive" v-show="$page.props.errors.tahvel_cookie">
+                    {{ $page.props.errors.tahvel_cookie }}
+                </p>
             </div>
-            <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                <PlaceholderPattern />
-            </div>
+            <Button @click="saveTahvelCookie" class="max-w-min">save</Button>
+        </div>
+            <pre>{{ userData }}</pre>
+            <pre> {{  }}</pre>
         </div>
     </AppLayout>
 </template>
